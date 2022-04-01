@@ -1,4 +1,4 @@
-module koffie-backend
+module "github.com/shaderboi/koffie-backend"
 
 go 1.17
 
