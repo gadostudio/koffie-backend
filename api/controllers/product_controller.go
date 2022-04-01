@@ -43,9 +43,18 @@ func GetAllProducts(w http.ResponseWriter, r *http.Request) {
 
 	conn, _ := db.Connection()
 
-	var product products.Product
+	var all_products []products.Product
 
-	products := conn.Find(&product)
+	conn.Find(&all_products)
 
-	json.NewEncoder(w).Encode(products)
+	w.Header().Set("Content-Type", "application/json")
+
+	err := json.NewEncoder(w).Encode(all_products)
+
+	if err != nil {
+		w.WriteHeader(http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
