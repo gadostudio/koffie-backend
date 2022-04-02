@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"encoding/json"
+	"github.com/gorilla/mux"
 	"github.com/shaderboi/koffie-backend/api/db"
 	"github.com/shaderboi/koffie-backend/api/products"
 	"io/ioutil"
@@ -58,3 +59,35 @@ func GetAllProducts(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
+
+func GetProduct(w http.ResponseWriter, r *http.Request) {
+
+	connect, _ := db.Connection()
+
+	vars := mux.Vars(r)
+
+	key := vars["code"]
+
+	var _products []products.Product
+
+	connect.Find(&_products, products.Product{Code: key})
+
+	json.NewEncoder(w).Encode(&_products)
+	w.WriteHeader(http.StatusOK)
+
+}
+
+//func GetUsers(w http.ResponseWriter, r *http.Request) {
+//
+//	ctx := context.Background()
+//
+//	client := settings.SetupFirebase(ctx)
+//
+//	u, err := client.GetUser(ctx, uid)
+//
+//	if err != nil {
+//		log.Fatalf("error getting user %s: %v\n", uid, err)
+//	}
+//
+//	log.Println("TES: %s", u.PhoneNumber)
+//}

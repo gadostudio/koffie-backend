@@ -1,4 +1,4 @@
-package api
+package settings
 
 import (
 	"context"
@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 )
 
-func SetupFirebase() *auth.Client {
+func SetupFirebase(ctx context.Context) *auth.Client {
 	serviceAccountKeyFilePath, err := filepath.Abs("./serviceAccountKey.json")
 	if err != nil {
 		panic("Unable to load serviceAccountKeys.json file")
@@ -20,9 +20,9 @@ func SetupFirebase() *auth.Client {
 		panic("Firebase load error")
 	}
 
-	auth, err := app.Auth(context.Background())
+	client, err := app.Auth(ctx)
 	if err != nil {
 		panic("Firebase load error")
 	}
-	return auth
+	return client
 }
