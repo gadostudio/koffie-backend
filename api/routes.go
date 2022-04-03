@@ -11,9 +11,9 @@ import (
 func Routes() {
 	r := mux.NewRouter()
 	r.Use(middleware.AuthMiddleware)
-	r.HandleFunc("/api/products", controllers.GetAllProducts).Methods("GET")
-	r.HandleFunc("/api/products", controllers.CreateProduct).Methods("POST")
-	r.HandleFunc("/api/products/{code}", controllers.GetProduct).Methods("GET")
+	r.HandleFunc("/api/v1/products", controllers.GetAllProducts).Methods("GET")
+	r.HandleFunc("/api/v1/products", controllers.CreateProduct).Methods("POST")
+	r.HandleFunc("/api/v1/products/{code}", controllers.GetProduct).Methods("GET")
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(":10000", nil))
 }
