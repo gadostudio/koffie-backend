@@ -6,8 +6,10 @@ import (
 
 type Product struct {
 	gorm.Model
-	Code  string `json:"code"`
-	Name  string `json:"name"`
-	Price uint   `json:"price"`
-	Stock uint   `json:"stock"`
+	Id           string `json:"item_id"`
+	Name         string `json:"name"`
+	Desc         string `json:"description"`
+	Price        uint   `json:"price"`
+	Image        string `json:"image_url"`
+	Undiscounted uint   `json:"undiscounted_price"`
 }

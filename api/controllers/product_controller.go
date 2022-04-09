@@ -70,7 +70,7 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 
 	var _products []products.Product
 
-	connect.Find(&_products, products.Product{Code: key})
+	connect.Find(&_products, products.Product{Id: key})
 
 	json.NewEncoder(w).Encode(&_products)
 	w.WriteHeader(http.StatusOK)
