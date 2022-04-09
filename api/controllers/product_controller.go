@@ -7,6 +7,7 @@ import (
 	"github.com/shaderboi/koffie-backend/api/products"
 	"io/ioutil"
 	"net/http"
+	"time"
 )
 
 func CreateProduct(w http.ResponseWriter, r *http.Request) {
@@ -31,6 +32,10 @@ func CreateProduct(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
+
+	now := time.Now()
+
+	data.CreatedAt = &now
 
 	if err := conn.Create(&data); err != nil {
 		w.WriteHeader(http.StatusConflict)
@@ -76,18 +81,3 @@ func GetProduct(w http.ResponseWriter, r *http.Request) {
 	w.WriteHeader(http.StatusOK)
 
 }
-
-//func GetUsers(w http.ResponseWriter, r *http.Request) {
-//
-//	ctx := context.Background()
-//
-//	client := settings.SetupFirebase(ctx)
-//
-//	u, err := client.GetUser(ctx, uid)
-//
-//	if err != nil {
-//		log.Fatalf("error getting user %s: %v\n", uid, err)
-//	}
-//
-//	log.Println("TES: %s", u.PhoneNumber)
-//}
