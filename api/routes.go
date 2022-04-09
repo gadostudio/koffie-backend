@@ -6,6 +6,7 @@ import (
 	"github.com/shaderboi/koffie-backend/api/middleware"
 	"log"
 	"net/http"
+	"os"
 )
 
 func Routes() {
@@ -16,5 +17,5 @@ func Routes() {
 	r.HandleFunc("/api/v1/products", controllers.GetAllProducts).Methods("GET")
 	r.HandleFunc("/api/v1/products/{code}", controllers.GetProduct).Methods("GET")
 	http.Handle("/", r)
-	log.Fatal(http.ListenAndServe(":10000", nil))
+	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), nil))
 }

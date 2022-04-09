@@ -5,7 +5,6 @@ go 1.17
 require (
 	firebase.google.com/go v3.13.0+incompatible
 	github.com/gorilla/mux v1.8.0
-	github.com/joho/godotenv v1.4.0
 	google.golang.org/api v0.74.0
 	gorm.io/driver/postgres v1.3.1
 	gorm.io/gorm v1.23.3
