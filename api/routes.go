@@ -10,9 +10,10 @@ import (
 
 func Routes() {
 	r := mux.NewRouter()
-	r.Use(middleware.AuthMiddleware)
+	requireAuth := r.Methods(http.MethodPost).Subrouter()
+	requireAuth.HandleFunc("/api/v1/products", controllers.CreateProduct).Methods("POST")
+	requireAuth.Use(middleware.AuthMiddleware)
 	r.HandleFunc("/api/v1/products", controllers.GetAllProducts).Methods("GET")
-	r.HandleFunc("/api/v1/products", controllers.CreateProduct).Methods("POST")
 	r.HandleFunc("/api/v1/products/{code}", controllers.GetProduct).Methods("GET")
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(":10000", nil))
