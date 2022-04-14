@@ -1,49 +1,11 @@
 package controllers
 
 import (
-	"encoding/json"
 	"github.com/graphql-go/graphql"
 	"github.com/shaderboi/koffie-backend/api/db"
 	"github.com/shaderboi/koffie-backend/api/products"
-	"io/ioutil"
-	"net/http"
 	"time"
 )
-
-func CreateProduct(w http.ResponseWriter, r *http.Request) {
-
-	conn, err := db.Connection()
-
-	if err != nil {
-		w.WriteHeader(http.StatusServiceUnavailable)
-		return
-	}
-
-	reqBody, err := ioutil.ReadAll(r.Body)
-
-	if err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	var data products.Product
-
-	if err := json.Unmarshal(reqBody, &data); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
-	now := time.Now()
-
-	data.CreatedAt = &now
-
-	if err := conn.Create(&data); err != nil {
-		w.WriteHeader(http.StatusConflict)
-		return
-	}
-
-	w.WriteHeader(http.StatusOK)
-}
 
 func GetProduct() (graphql.Schema, error) {
 
@@ -112,8 +74,59 @@ func GetProduct() (graphql.Schema, error) {
 		},
 	}
 
+	var mutationType = graphql.NewObject(graphql.ObjectConfig{
+		Name: "Mutation",
+		Fields: graphql.Fields{
+			"create": &graphql.Field{
+				Type:        productType,
+				Description: "Create a new product",
+				Args: graphql.FieldConfigArgument{
+					"item_id": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"name": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"description": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.String),
+					},
+					"price": &graphql.ArgumentConfig{
+						Type: graphql.NewNonNull(graphql.Int),
+					},
+					"image": &graphql.ArgumentConfig{
+						Type: graphql.String,
+					},
+					"discount": &graphql.ArgumentConfig{
+						Type: graphql.Int,
+					},
+				},
+				Resolve: func(p graphql.ResolveParams) (interface{}, error) {
+
+					now := time.Now()
+
+					disc := p.Args["discount"].(int)
+
+					product := products.Product{
+						Id:        p.Args["item_id"].(string),
+						Name:      p.Args["name"].(string),
+						Desc:      p.Args["description"].(string),
+						Price:     p.Args["price"].(int),
+						Image:     p.Args["image"].(string),
+						Discount:  &disc,
+						CreatedAt: &now,
+					}
+
+					create := conn.Create(&product)
+
+					return product, create.Error
+				},
+			},
+		},
+	})
+
 	rootQuery := graphql.ObjectConfig{Name: "Root", Fields: fields}
-	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery)}
+	schemaConfig := graphql.SchemaConfig{Query: graphql.NewObject(rootQuery),
+		Mutation: mutationType}
 	schema, err := graphql.NewSchema(schemaConfig)
 
 	return schema, err
