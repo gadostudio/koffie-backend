@@ -12,6 +12,7 @@ import (
 func Routes() {
 	r := mux.NewRouter()
 	requireAuth := r.Methods(http.MethodPost).Subrouter()
+	requireAuth.HandleFunc("/api/v1/payment", controllers.ProcessPayment).Methods("POST")
 	requireAuth.HandleFunc("/api/v1/products", controllers.CreateProduct).Methods("POST")
 	requireAuth.Use(middleware.AuthMiddleware)
 	r.HandleFunc("/api/v1/products", controllers.GetAllProducts).Methods("GET")
