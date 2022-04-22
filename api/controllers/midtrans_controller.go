@@ -2,6 +2,8 @@ package controllers
 
 import (
 	"encoding/json"
+	"fmt"
+	mid "github.com/midtrans/midtrans-go"
 	"github.com/shaderboi/koffie-backend/api/db"
 	"github.com/shaderboi/koffie-backend/api/midtrans"
 	"github.com/shaderboi/koffie-backend/api/settings"
@@ -10,6 +12,11 @@ import (
 	"net/http"
 	"time"
 )
+
+type PaymentRequest struct {
+	Payment  midtrans.Payment `json:"payment"`
+	Quantity int32            `json:"quantity"`
+}
 
 func ProcessPayment(w http.ResponseWriter, r *http.Request) {
 
@@ -27,14 +34,27 @@ func ProcessPayment(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var data midtrans.Payment
+	var d PaymentRequest
 
-	if err := json.Unmarshal(reqBody, &data); err != nil {
+	if err := json.Unmarshal(reqBody, &d); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
 	}
 
-	req := midtrans.GetTransactionDetails("KOFFIE-ORDER-"+string(rand.Int()), data.Amount, data.Phone)
+	data := d.Payment
+
+	details := []mid.ItemDetails{}
+
+	for _, s := range data.Products {
+		itemDetails := mid.ItemDetails{
+			Name:  s.Name,
+			Price: int64(s.Price),
+			Qty:   d.Quantity,
+		}
+		details = append(details, itemDetails)
+	}
+
+	req := midtrans.GetTransactionDetails(fmt.Sprintf("KOFFIE-ORDER-%d", rand.Int()), data.Amount, data.Phone, &details)
 
 	snapResp, _ := settings.S.CreateTransaction(req)
 
