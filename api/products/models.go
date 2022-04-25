@@ -5,21 +5,20 @@ import (
 )
 
 type Product struct {
-	Id         string     `gorm:"primaryKey" json:"item_id"`
+	Id         uint       `gorm:"primaryKey;AUTO_INCREMENT" json:"id"`
 	Name       string     `json:"name"`
 	Desc       string     `json:"description"`
 	Price      uint       `json:"price"`
 	Image      string     `json:"image_url"`
 	CategoryId uint       `json:"category_id" gorm:"foreignKey"`
-	Category   Category   `gorm:"foreignKey:CategoryId"`
-	Stock      uint       `json:"stock"`
 	Discount   *uint      `json:"discount"`
 	CreatedAt  *time.Time `json:"created_at"`
 }
 
 type Category struct {
-	Id           uint   `gorm:"primaryKey" json:"category_id"`
-	CategoryName string `json:"category_name"`
+	Id           uint       `gorm:"primaryKey;AUTO_INCREMENT" json:"category_id"`
+	CategoryName string     `json:"category_name"`
+	CreatedAt    *time.Time `json:"created_at"`
 }
 
 type CategorizedProduct struct {

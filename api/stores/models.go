@@ -1,13 +1,22 @@
 package stores
 
 type Store struct {
-	id         uint
-	name       string
-	address    string
-	coordinate Coordinate
+	Id      uint    `gorm:"primaryKey;AUTO_INCREMENT" json:"id"`
+	Name    string  `json:"name"`
+	Address string  `json:"address"`
+	Lat     float32 `json:"lat"`
+	Lon     float32 `json:"lon"`
+}
+
+type StoreResponse struct {
+	Id      uint   `json:"id"`
+	Name    string `json:"name"`
+	Address string `json:"address"`
+
+	Coordinate Coordinate `json:"coordinate"`
 }
 
 type Coordinate struct {
-	lat float32
-	lon float32
+	Lat float32
+	Lon float32
 }

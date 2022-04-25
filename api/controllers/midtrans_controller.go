@@ -54,7 +54,7 @@ func ProcessPayment(w http.ResponseWriter, r *http.Request) {
 		details = append(details, itemDetails)
 	}
 
-	req := midtrans.GetTransactionDetails(fmt.Sprintf("KOFFIE-ORDER-%d", rand.Int()), data.Amount, data.Phone, &details)
+	req := midtrans.GetTransactionDetails(fmt.Sprintf("KOFFIE-ORDER-%d", rand.Int()), data.Amount, data.Phone)
 
 	snapResp, _ := settings.S.CreateTransaction(req)
 
