@@ -14,9 +14,12 @@ func Routes() {
 	requireAuth := r.Methods(http.MethodPost).Subrouter()
 	requireAuth.HandleFunc("/api/v1/payment", controllers.ProcessPayment).Methods("POST")
 	requireAuth.HandleFunc("/api/v1/products", controllers.CreateProduct).Methods("POST")
+	requireAuth.HandleFunc("/api/v1/categories", controllers.CreateCategory).Methods("POST")
+	requireAuth.HandleFunc("/api/v1/stores", controllers.CreateStore).Methods("POST")
 	requireAuth.Use(middleware.AuthMiddleware)
 	r.HandleFunc("/api/v1/products", controllers.GetAllProducts).Methods("GET")
 	r.HandleFunc("/api/v1/products/{code}", controllers.GetProduct).Methods("GET")
+	r.HandleFunc("/api/v1/stores", controllers.GetAllStores).Methods("GET")
 	http.Handle("/", r)
 	log.Fatal(http.ListenAndServe(":"+os.Getenv("PORT"), nil))
 }
