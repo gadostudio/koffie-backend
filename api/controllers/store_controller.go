@@ -49,7 +49,24 @@ func GetAllStores(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 
-	err := json.NewEncoder(w).Encode(all_stores)
+	var resp []stores.StoreResponse
+
+	for _, i := range all_stores {
+
+		coord := stores.Coordinate{
+			Lat: i.Lat,
+			Lon: i.Lon,
+		}
+
+		resp = append(resp, stores.StoreResponse{
+			Id:         i.Id,
+			Name:       i.Name,
+			Address:    i.Name,
+			Coordinate: coord,
+		})
+	}
+
+	err := json.NewEncoder(w).Encode(resp)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -57,27 +74,4 @@ func GetAllStores(w http.ResponseWriter, r *http.Request) {
 	}
 
 	w.WriteHeader(http.StatusOK)
-}
-
-func GetStoreByCoord(w http.ResponseWriter, r *http.Request) {
-
-	_, _ = db.Connection()
-
-	q := r.URL.Query()
-	lat := q["lat"]
-	_ = q["lon"]
-
-	//
-	//if err != nil {
-	//	w.WriteHeader(http.StatusBadRequest)
-	//	return
-	//}
-	//
-	//var _store stores.Store
-	//
-	//connect.Where("coordinate = ?")
-
-	json.NewEncoder(w).Encode(&lat)
-	w.WriteHeader(http.StatusOK)
-
 }

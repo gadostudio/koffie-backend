@@ -1,6 +1,6 @@
 module github.com/shaderboi/koffie-backend
 
-go 1.18
+go 1.17
 
 require (
 	firebase.google.com/go v3.13.0+incompatible
