@@ -61,7 +61,7 @@ func GetAllStores(w http.ResponseWriter, r *http.Request) {
 		resp = append(resp, stores.StoreResponse{
 			Id:         i.Id,
 			Name:       i.Name,
-			Address:    i.Name,
+			Address:    i.Address,
 			Coordinate: coord,
 		})
 	}
