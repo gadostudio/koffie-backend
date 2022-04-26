@@ -58,26 +58,3 @@ func GetAllStores(w http.ResponseWriter, r *http.Request) {
 
 	w.WriteHeader(http.StatusOK)
 }
-
-func GetStoreByCoord(w http.ResponseWriter, r *http.Request) {
-
-	_, _ = db.Connection()
-
-	q := r.URL.Query()
-	lat := q["lat"]
-	_ = q["lon"]
-
-	//
-	//if err != nil {
-	//	w.WriteHeader(http.StatusBadRequest)
-	//	return
-	//}
-	//
-	//var _store stores.Store
-	//
-	//connect.Where("coordinate = ?")
-
-	json.NewEncoder(w).Encode(&lat)
-	w.WriteHeader(http.StatusOK)
-
-}
